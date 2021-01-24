@@ -1,6 +1,9 @@
+import java.util.Arrays;
+
 /**
+ * 
  * Un objeto de esta clase guarda la información de un estudiante
- *
+ * Andrés Guallar Chamorro
  */
 public class Estudiante {
     private final static String SEPARADOR = ",";
@@ -17,10 +20,50 @@ public class Estudiante {
      *  
      */
     public Estudiante(String lineaDatos) {
-         
+        String[] datos = lineaDatos.split(SEPARADOR);
+        String nom = "";
+
+        String FNJ = datos[2].trim();
+        String FJ = datos[3].trim();
+
+        this.nombre = "";
+        nom = datos[0].trim();
+        String[] nomAux = nom.split(" ");
+
+        if(nomAux.length > 1){
+            for(int i = 0; i < nomAux.length - 1; i++){
+                String str = nomAux[i].substring(0, 1);
+                this.nombre += str.toUpperCase() + ".";
+
+            }
+            String str2 = nomAux[nomAux.length - 1].substring(0,1);
+            String str1 = nomAux[nomAux.length - 1].substring(1);
+            this.nombre += str2.toUpperCase() + str1;
+        }
+        else{
+            String str1 = nomAux[nomAux.length - 1].substring(0,1);
+            String str2 = nomAux[nomAux.length - 1].substring(1);
+            this.nombre += str1.toUpperCase() + str2;
+        }
+        // StringBuilder sb = new StringBuilder(nom);
+        // int pos = sb.indexOf(" ");
+        // while(pos != - 1){
+        // String str1 = sb.substring(0, 1);
+        // this.nombre += str1.toUpperCase() + ".";
+        // sb = sb.delete(pos, nom.length());
+
+        // pos = sb.indexOf(" ");
+        // }
+        // String str2 = sb.substring(0, 1);
+        // this.nombre += sb.append(str2.toUpperCase()) ;
+
+        this.apellidos = datos[1].trim();
+        this.apellidos = this.apellidos.toUpperCase();
+
+        this.faltasNoJustificadas = Integer.parseInt(FNJ);
+        this.faltasJustificadas = Integer.parseInt(FJ);
 
     }
-
 
     /**
      * accesor para el nombre completo
@@ -93,13 +136,12 @@ public class Estudiante {
      * (ver enunciado)
      */
     public String toString() {
-        
+
         return null;
 
     }
 
-
-     public static void main(String[] args) {
+    public static void main(String[] args) {
         Estudiante e1 = new Estudiante("  ander ibai  ,  Ruiz Sena , 12, 23");
         System.out.println(e1);
         System.out.println();
@@ -113,7 +155,6 @@ public class Estudiante {
         Estudiante e4 = new Estudiante("julen, Duque Puyal, 5, 55");
         System.out.println(e4);
         System.out.println();
-        
 
         System.out.println("---------------------------------");
         e1.justificar(3);
