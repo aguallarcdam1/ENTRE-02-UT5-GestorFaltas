@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-
+import java.util.Arrays;
 /**
  * Un objeto de esta clase permite registrar estudiantes de un
  * curso (leyendo la información de un fichero de texto) y 
@@ -10,10 +10,11 @@ import java.util.Scanner;
  * @author Andrés Guallar Chamorro
  */
 public class GestorFaltas {
-     
-
+    private Estudiante[] estudiantes; 
+    private int total;
     public GestorFaltas(int n) {
-         
+        this.estudiantes = new Estudiante[n];
+        this.total = 0;
     }
 
     /**
@@ -21,7 +22,7 @@ public class GestorFaltas {
      * false en otro caso
      */
     public boolean cursoCompleto() {
-        return false;
+        return total == estudiantes.length;
     }
 
     /**
@@ -37,10 +38,18 @@ public class GestorFaltas {
      *    
      */
     public void addEstudiante(Estudiante nuevo) {
-        
+        if(!cursoCompleto() && buscarEstudiante(nuevo.getApellidos()) == -1) {
+            int i = total - 1;
+
+            while (i >= 0 && (estudiantes[i].getApellidos()).compareTo(nuevo.getApellidos()) > 0) {
+                estudiantes[i + 1] = estudiantes[i];
+                i -- ;
+            }
+            estudiantes[i + 1] = nuevo; 
+            total ++; 
+        }
 
     }
-
 
     /**
      * buscar un estudiante por sus apellidos
@@ -51,8 +60,20 @@ public class GestorFaltas {
      *  
      */
     public int buscarEstudiante(String apellidos) {
-         
-        return 0;
+        String[] ape = new String[total];
+        for(int i = 0; i < total; i++){
+            ape[i] = estudiantes[i].getApellidos();
+        }
+
+        int posicion = Arrays.binarySearch(ape, apellidos);
+
+        if(posicion >= 0){
+            return posicion;
+        }
+        else{
+            return -1;
+        }
+
     }
 
     /**
@@ -61,8 +82,13 @@ public class GestorFaltas {
      *  
      */
     public String toString() {
-        
-        return null;
+
+        String totalEs = "Relación de estudiantes(" + total + ")";
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < this.total; i++){
+            sb = sb.append("\n").append(estudiantes[i].toString()).append("\n------------------\n");
+        }
+        return totalEs + "\n" + sb;
 
     }
 
@@ -75,8 +101,10 @@ public class GestorFaltas {
      *  justificar también)
      */
     public void justificarFaltas(String apellidos, int faltas) {
-         
-
+        Estudiante justificado = estudiantes[buscarEstudiante(apellidos)];
+        justificado.justificar(faltas);
+        System.out.println("Justificadas " + faltas + " a " 
+            + justificado.getApellidos() + "," + justificado.getNombre() + "\n") ;
     }
 
     /**
@@ -85,8 +113,24 @@ public class GestorFaltas {
      * Método de selección directa
      */
     public void ordenar() {
-        
-
+        for (int i = 0; i < total; i++) {
+            int posmin = i;
+            for (int j = i + 1; j < total; j++) {
+                if(estudiantes[j].getFaltasNoJustificadas() != estudiantes[posmin].getFaltasNoJustificadas()){
+                    if (estudiantes[j].getFaltasNoJustificadas() > estudiantes[posmin].getFaltasNoJustificadas()) {
+                        posmin = j;
+                    }
+                }
+                else{
+                    if (estudiantes[j].getFaltasJustificadas() > estudiantes[posmin].getFaltasJustificadas()) {
+                        posmin = j;
+                    }
+                }
+            }
+            Estudiante aux = estudiantes[posmin];
+            estudiantes[posmin] = estudiantes[i];
+            estudiantes[i] = aux;
+        }
     }
 
     /**
@@ -94,8 +138,12 @@ public class GestorFaltas {
      * aquellos estudiantes con 30 o más faltas injustificadas
      */
     public void anularMatricula() {
-         
-
+        for(int i = total - 1; i >= 0; i--){
+            if(estudiantes[i].getFaltasNoJustificadas() >= 30){
+                System.arraycopy(estudiantes, i + 1, estudiantes, i, total - i - 1);
+                total--;
+            }
+        }
     }
 
     /**
@@ -111,9 +159,7 @@ public class GestorFaltas {
                 String linea = sc.nextLine();
                 Estudiante estudiante = new Estudiante(linea);
                 this.addEstudiante(estudiante);
-
             }
-
         }
         catch (IOException e) {
             System.out.println("Error al leer del fichero");

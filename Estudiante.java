@@ -11,6 +11,7 @@ public class Estudiante {
     private String apellidos;
     private int faltasNoJustificadas;
     private int faltasJustificadas;
+    private TipoApercibimiento apercibimiento;
 
     /**
      *  
@@ -20,6 +21,8 @@ public class Estudiante {
      *  
      */
     public Estudiante(String lineaDatos) {
+        this.apercibimiento = apercibimiento.DIEZ;
+
         String[] datos = lineaDatos.split(SEPARADOR);
         String nom = "";
 
@@ -32,9 +35,10 @@ public class Estudiante {
 
         if(nomAux.length > 1){
             for(int i = 0; i < nomAux.length - 1; i++){
-                String str = nomAux[i].substring(0, 1);
-                this.nombre += str.toUpperCase() + ".";
-
+                if(!nomAux[i].equals("")){
+                    String str = nomAux[i].substring(0, 1);
+                    this.nombre += str.toUpperCase() + ".";
+                }
             }
             String str2 = nomAux[nomAux.length - 1].substring(0,1);
             String str1 = nomAux[nomAux.length - 1].substring(1);
@@ -45,17 +49,6 @@ public class Estudiante {
             String str2 = nomAux[nomAux.length - 1].substring(1);
             this.nombre += str1.toUpperCase() + str2;
         }
-        // StringBuilder sb = new StringBuilder(nom);
-        // int pos = sb.indexOf(" ");
-        // while(pos != - 1){
-        // String str1 = sb.substring(0, 1);
-        // this.nombre += str1.toUpperCase() + ".";
-        // sb = sb.delete(pos, nom.length());
-
-        // pos = sb.indexOf(" ");
-        // }
-        // String str2 = sb.substring(0, 1);
-        // this.nombre += sb.append(str2.toUpperCase()) ;
 
         this.apellidos = datos[1].trim();
         this.apellidos = this.apellidos.toUpperCase();
@@ -136,8 +129,29 @@ public class Estudiante {
      * (ver enunciado)
      */
     public String toString() {
-
-        return null;
+        String estudiante = "";
+        String nomCompleto = "Apellidos y Nombre:\t" + apellidos + ", " + nombre + "\n";
+        String FNJ = "Faltas No Justificadas:\t" + faltasNoJustificadas + "\n";
+        String FJ = "Faltas Justificadas:\t" + faltasJustificadas + "\n";
+        String aper = "Apercibimientos:\t";
+        if(faltasNoJustificadas < 10){
+            aper += "Sin apercibimientos";
+        }
+        else if(faltasNoJustificadas < 20){
+            aper += apercibimiento.DIEZ;
+        }
+        else if(faltasNoJustificadas < 30){
+            aper += apercibimiento.DIEZ + " " + apercibimiento.VEINTE;
+        }
+        else{
+            aper += apercibimiento.DIEZ + " " 
+                    + apercibimiento.VEINTE+ " " + apercibimiento.TREINTA;
+        }
+        estudiante += estudiante.format("%-25s", nomCompleto) + 
+                        estudiante.format("%-25s", FNJ) + 
+                        estudiante.format("%-25s", FJ) + 
+                        estudiante.format("%-25s", aper) + "\n";
+        return estudiante;
 
     }
 

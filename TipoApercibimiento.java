@@ -7,21 +7,6 @@
  */
 public enum TipoApercibimiento
 {
-    DIEZ (10), 
+    DIEZ, VEINTE, TREINTA;
 
-    VEINTE (20), 
-
-    TREINTA (30);
-
-    private int valor;
-
-    private TipoApercibimiento(int valor)
-    {
-        this.valor = valor;
-    }
-
-    public int getValor()
-    {
-        return valor;
-    }
 }
